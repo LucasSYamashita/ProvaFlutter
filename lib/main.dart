@@ -20,3 +20,22 @@ class Contato {
 
   Contato({required this.nome, required this.telefone, required this.email});
 }
+class ContatosRepository {
+  final List<Contato> contatos = [];
+
+  void addContato(Contato c) {
+    contatos.add(c);
+  }
+
+  void updateContato(int index, Contato contato) {
+    contatos[index] = contato;
+  }
+
+  void deleteContato(int index) {
+    contatos.removeAt(index);
+  }
+
+  List<Contato> getContatos() {
+    return contatos;
+  }
+}
