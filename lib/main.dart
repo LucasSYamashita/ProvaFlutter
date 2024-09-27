@@ -79,3 +79,120 @@ class Principal extends StatelessWidget {
   }
 }
 
+class Cadastro extends StatefulWidget {
+  final ContatosRepository contatos;
+  final int? index; // Edita contato
+
+  Cadastro({required this.contatos, this.index});
+
+  @override
+  State<Cadastro> createState() => _CadastroState();
+}
+
+class _CadastroState extends State<Cadastro> {
+  final TextEditingController nomeController = TextEditingController();
+  final TextEditingController telefoneController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.index != null) {
+      final contato = widget.contatos.getContatos()[widget.index!];
+      nomeController.text = contato.nome;
+      telefoneController.text = contato.telefone;
+      emailController.text = contato.email;
+    }
+  }
+
+  String? _validarEmail(String email) {
+    String pattern =
+        r'^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[a-zA-Z]+';
+    RegExp regExp = RegExp(pattern);
+    if (!regExp.hasMatch(email)) {
+      return 'E-mail inválido';
+    }
+    return null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.index == null ? 'Cadastrar Contato' : 'Editar Contato'),
+        actions: widget.index != null
+            ? [
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    widget.contatos.deleteContato(widget.index!);
+                    Navigator.pop(context);
+                  },
+                ),
+              ]
+            : null,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              decoration: InputDecoration(labelText: 'Nome'),
+              controller: nomeController,
+            ),
+            TextField(
+              decoration: InputDecoration(labelText: 'Telefone'),
+              controller: telefoneController,
+              keyboardType: TextInputType.phone,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(11),
+              ],
+            ),
+            TextField(
+              decoration: InputDecoration(labelText: 'E-mail'),
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                if (nomeController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Nome não pode estar vazio')),
+                  );
+                  return;
+                }
+
+                if (_validarEmail(emailController.text) != null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('E-mail inválido')),
+                  );
+                  return;
+                }
+
+                final contato = Contato(
+                  nome: nomeController.text,
+                  telefone: telefoneController.text,
+                  email: emailController.text,
+                );
+
+                setState(() {
+                  if (widget.index == null) {
+                    widget.contatos.addContato(contato);
+                  } else {
+                    widget.contatos.updateContato(widget.index!, contato);
+                  }
+                });
+
+                Navigator.pop(context);
+              },
+              child: Text('Salvar'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
