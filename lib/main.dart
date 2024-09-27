@@ -39,3 +39,43 @@ class ContatosRepository {
     return contatos;
   }
 }
+
+class Principal extends StatelessWidget {
+  final ContatosRepository contatos = ContatosRepository();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Agenda de Contatos'),
+      ),
+      body: Column(
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Cadastro(contatos: contatos),
+                ),
+              );
+            },
+            child: Text("Cadastrar Contato"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Listagem(contatos: contatos),
+                ),
+              );
+            },
+            child: Text("Listar Contatos"),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
