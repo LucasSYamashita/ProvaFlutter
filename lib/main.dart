@@ -196,3 +196,45 @@ class _CadastroState extends State<Cadastro> {
   }
 }
 
+
+class Listagem extends StatefulWidget {
+  final ContatosRepository contatos;
+  Listagem({required this.contatos});
+
+  @override
+  State<Listagem> createState() => _ListagemState();
+}
+
+class _ListagemState extends State<Listagem> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Lista de Contatos'),
+      ),
+      body: ListView.builder(
+        itemCount: widget.contatos.getContatos().length,
+        itemBuilder: (context, index) {
+          final contato = widget.contatos.getContatos()[index];
+          return ListTile(
+            title: Text(contato.nome),
+            subtitle: Text('${contato.telefone} - ${contato.email}'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Cadastro(
+                    contatos: widget.contatos,
+                    index: index,
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+
