@@ -42,4 +42,7 @@ E-mail deve seguir o formato válido.
 versão 3.0.0 ou superior.
 ## Dart:
  versão 2.17.0 ou superior.
->>>>>>> origin/master
+## Sqflite: 
+ versão 2.0.0 ou superior.
+## Shared Preferences
+ versão 2.3.2 ou superior.
