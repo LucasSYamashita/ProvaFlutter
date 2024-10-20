@@ -6,7 +6,6 @@ class Contato {
 
   Contato({this.id, required this.nome, required this.telefone, required this.email});
 
-  // Converter Contato para Map (para armazenar no SQLite)
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -16,7 +15,6 @@ class Contato {
     };
   }
 
-  // Converter de Map para Contato
   factory Contato.fromMap(Map<String, dynamic> map) {
     return Contato(
       id: map['id'],
